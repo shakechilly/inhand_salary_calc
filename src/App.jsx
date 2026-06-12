@@ -495,9 +495,17 @@ export default function App() {
             <div style={{ fontSize: 9, letterSpacing: "1.5px", textTransform: "uppercase", color: T.dim, marginBottom: 8 }}>Derivation</div>
             {[
               ["Basic",     "= CTC / 2",                            fmtINR(r.basic)],
-              ["Emp PF",    pfFixed ? "= ₹1,800/mo × 12" : "= Empl PF",  fmtINR(r.empPF)],
+              ["Emp PF", pfFixed
+    ? "= ₹21,600/yr (₹1,800 × 12)"
+    : "= Empl PF",
+  fmtINR(r.empPF)
+              ],
               ["NPS",       "=",                                     fmtINR(r.nps)],
-              ["Taxable",   "= CTC − EmpPF − NPS − 75K",            fmtINR(r.taxableIncome)],
+              ["Taxable", pfFixed
+    ? "= CTC − ₹21,600 − NPS − ₹75,000"
+    : "= CTC − EmpPF − NPS − ₹75,000",
+  fmtINR(r.taxableIncome)
+              ],
               ["PreTax/mo", "= (CTC−EmpPF−EmplPF−NPS)/12",          fmtINR(r.preMonthly)],
             ].map(([sym, op, num]) => (
               <div key={sym} style={{ fontFamily: "monospace", fontSize: 10, lineHeight: 1.85, display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -581,7 +589,13 @@ export default function App() {
                     <div key={i} style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:12, padding:"4px 0", paddingLeft:act?6:0, borderBottom:i<sections.length-1?"1px solid #252a38":"none", background:act?"rgba(91,141,255,0.06)":"transparent", borderRadius:act?4:0 }}>
                       <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.7 }}>
                         {pfFixed
-                          ? <>x·<span style={{color:T.yellow}}>{(1-npsPct/200)*100}%</span>/12 − <span style={{color:T.dim}}>₹3,600/mo PF (₹21,600/yr)</span></>
+                          ? <>  x·<span style={{color:T.yellow}}>
+      {((1 - npsPct / 200) * 100).toFixed(1)}%
+    </span>/12 −
+    <span style={{color:T.dim}}>
+      ₹43,200/yr PF (₹3,600/mo)
+    </span>
+  </>
                           : <>x·<span style={{color:T.yellow}}>{(k*100).toFixed(1)}%</span>/12</>
                         }
                         {effR > 0
